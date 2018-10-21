@@ -1,0 +1,98 @@
+<!--
+Most of the HTML <head> and part of the outer <body> should be included when you
+install the "react-scripts".
+
+This is inspired by "Fun Retro", which you can try out yourself by creating your own board
+@see https://funretro.io/
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="retro-board.css">
+  <title>Retro Board Example</title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root">
+
+    <!-- Start of what is rendered in React -->
+    <main class="content">
+      <h1>Retro Board</h1>
+      <div class="RetroBoad">
+
+        <div class="RetroBoardCategory RetroBoardCategory-1">
+          <h2>Went Well</h2>
+          <button type="button" class="button button-new">
+            <span class="sr-only">Add to "Went Well"</span>+
+          </button>
+          <div class="Retro">
+            <label class="sr-only" for="retro-label-1">Enter retro text</label>
+            <textarea id="retro-label-1" class="textbox" placeholder="Enter text here" rows="1">I coded my first React component and it worked</textarea>
+            <div class="ButtonGroup">
+              <button type="button" class="button button-left"><span class="sr-only">Move Left</span>&lt;</button>
+              <button type="button" class="button button-delete"><span class="sr-only">Delete</span>×</button>
+              <button type="button" class="button button-right"><span class="sr-only">Move Right</span>&gt;</button>
+            </div>
+          </div>
+          <div class="Retro">
+            <label class="sr-only" for="retro-label-6">Enter retro text</label>
+            <textarea id="retro-label-6" class="textbox" placeholder="Enter text here" rows="1"></textarea>
+            <div class="ButtonGroup">
+              <button type="button" class="button button-left"><span class="sr-only">Move Left</span>&lt;</button>
+              <button type="button" class="button button-delete"><span class="sr-only">Delete</span>×</button>
+              <button type="button" class="button button-right"><span class="sr-only">Move Right</span>&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="RetroBoardCategory RetroBoardCategory-2">
+          <h2>To Improve</h2>
+          <button type="button" class="button button-new"><span class="sr-only">Add to "To Improve"</span>+</button>
+          <div class="Retro">
+            <label class="sr-only" for="retro-label-2">Enter retro text</label>
+            <textarea id="retro-label-2" class="textbox" placeholder="Enter text here" rows="1">Life</textarea>
+            <div class="ButtonGroup">
+              <button type="button" class="button button-left"><span class="sr-only">Move Left</span>&lt;</button>
+              <button type="button" class="button button-delete"><span class="sr-only">Delete</span>×</button>
+              <button type="button" class="button button-right"><span class="sr-only">Move Right</span>&gt;</button>
+            </div>
+          </div>
+          <div class="Retro">
+            <label class="sr-only" for="retro-label-3">Enter retro text</label>
+            <textarea id="retro-label-3" class="textbox" placeholder="Enter text here" rows="1">Thinking more positively</textarea>
+            <div class="ButtonGroup">
+              <button type="button" class="button button-left"><span class="sr-only">Move Left</span>&lt;</button>
+              <button type="button" class="button button-delete"><span class="sr-only">Delete</span>×</button>
+              <button type="button" class="button button-right"><span class="sr-only">Move Right</span>&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="RetroBoardCategory RetroBoardCategory-3">
+          <h2>Action Items</h2><button type="button" class="button button-new"><span class="sr-only">Add to "Action
+              Items"</span>+</button>
+          <div class="Retro">
+            <label class="sr-only" for="retro-label-4">Enter retro text</label>
+            <textarea id="retro-label-4" class="textbox" placeholder="Enter text here" rows="1">Completing this</textarea>
+            <div class="ButtonGroup">
+              <button type="button" class="button button-left"><span class="sr-only">Move Left</span>&lt;</button>
+              <button type="button" class="button button-delete"><span class="sr-only">Delete</span>×</button>
+              <button type="button" class="button button-right"><span class="sr-only">Move Right</span>&gt;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- End of what is rendered in React -->
+
+  </div>
+</body>
+
+</html>

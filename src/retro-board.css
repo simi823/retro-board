@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  color: #555;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.content {
+  max-width: 1200px;
+  padding: 0 0.25rem;
+  margin: auto;
+}
+
+@media (min-width: 640px) {
+  .RetroBoad {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 -0.25rem;
+  }
+  .RetroBoardCategory {
+    padding: 0 0.25rem;
+  }
+}
+
+.RetroBoardCategory {
+  flex: 1;
+}
+.RetroBoardCategory > .button {
+  width: 100%;
+}
+.RetroBoardCategory > .button,
+.RetroBoardCategory > .Retro {
+  margin-bottom: 0.5rem;
+}
+
+.Retro {
+  color: white;
+  padding: 0.25rem;
+}
+.RetroBoardCategory-1 .Retro {
+  background-color: #019588;
+}
+.RetroBoardCategory-2 .Retro {
+  background-color: #e91e63;
+}
+.RetroBoardCategory-3 .Retro {
+  background-color: #9c28b0;
+}
+
+.button {
+  display: inline-block;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.button-new {
+  padding: 0.25rem;
+  background-color: #eee;
+}
+.button-new:hover,
+.button-new:active,
+.button-new:focus {
+  background-color: #ddd;
+}
+.Retro .button {
+  background: transparent;
+  opacity: 0.65;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+.Retro .button:hover {
+  opacity: 1;
+}
+
+.ButtonGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+.textbox {
+  font: inherit;
+  color: inherit;
+}
+.Retro .textbox {
+  display: block;
+  width: 100%;
+  background-color: transparent;
+  border: 0;
+  padding: 0.25rem;
+  margin-bottom: 0.5rem;
+  /* resize: vertical; */
+  resize: none;
+}
+.Retro .textbox:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2) url("./pen.svg") top right/27px no-repeat;
+  cursor: pointer;
+}
+.Retro .textbox:active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.Retro .textbox:active,
+.Retro .textbox:focus {
+  background-color: white;
+  color: #333;
+  cursor: auto;
+}
+
+/* Styling the placeholder for each browser */
+::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.65;
+}
+::-moz-placeholder {
+  color: inherit;
+  opacity: 0.65;
+}
+:-ms-input-placeholder {
+  color: inherit;
+  opacity: 0.65;
+}
+:-moz-placeholder {
+  color: inherit;
+  opacity: 0.65;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
