@@ -41,13 +41,13 @@ function Card(props) {
   console.log("Card: ", props);
   return (
     <div>
-      <div card_id={props.id}>
+      <div card_id={props.card_id}>
         <p>{props.title}</p>
       </div>
       <div>
-        <button>&lt;</button>
-        <button>x</button>
-        <button>&gt;</button>
+        <button onClick={props.moveLeft}>&lt;</button>
+        <button onClick={props.deleteCard}>x</button>
+        <button onClick={props.moveRight}>&gt;</button>
       </div>
     </div>
   )
@@ -60,19 +60,27 @@ class App extends Component {
     input: ''
   };
   onClickNewCard = id => {
-    console.log('onClickNewCard: ', id, this.state)
-    if (this.state.id === id)
+    console.log('onClickNewCard: ', id, this.state);
       this.setState({
         showAddCard: !this.state.showAddCard,
         showButton: "-"
       })
   };
   handleSubmitNewCard(e) {
-
+    console.log(this.state);
   };
   deleteNewCard(e) {
     e.preventDetaul();
     this.setState({showAddCard: !this.state.showAddCard})
+  };
+  moveLeft() {
+    console.log(this.state);
+  };
+  moveRight() {
+    console.log(this.state);
+  };
+  deleteCard() {
+    console.log(this.state);
   };
   render() {
     console.log("Main render: ", this.state);
@@ -82,7 +90,7 @@ class App extends Component {
         {this.state.categories && this.state.categories.map((category, index) => {
           console.log(category);
           return (
-            <div category_id={category.id}>
+            <div key={category.id}>
               <h2>{category.name}</h2>
               <div>
                 <button onClick={() => this.onClickNewCard(category.id)}>{this.state.showButton}</button>
@@ -90,11 +98,11 @@ class App extends Component {
               <div>
                 {category.cards && category.cards.map((card, index) => {
                   console.log(card);
-                  return (<Card id={card.id} title={card.title}/>)
+                  return (<Card key={card.id} card_id={card.id} title={card.title}/>)
                 })}
               </div>              
               <div>
-                {this.state.showAddCard && <AddNewCard category_id={category.id} cards={category.cards} />}
+                {this.state.showAddCard && <AddNewCard key={category.id} category_id={category.id} cards={category.cards} />}
               </div>
             </div>
           )
