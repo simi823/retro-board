@@ -1,147 +1,107 @@
 import React, { Component } from 'react';
-// import pen from './pen.svg';
 import './retro-board.css';
-import Card from './components/Card/Card.js'
-import AddCard from './components/AddCard/AddCard.js'
-import ControlCard from './components/ControlCard/ControlCard.js'
 
 const categories = [
-    {
-      id: 1,
-      name: 'Went Well',
-      colorId: "ww",
-      color: '#019588',
-    },
-    {
-      id: 2,
-      name: 'To Improve',
-      colorId: "ti",
-      color: '#e91e63',
-    },
-    {
-      id: 3,
-      name: "Action Items",
-      colorId: "ai",
-      color: '#9c28b0',
-    }
+  {
+    id: 1,
+    name: 'Went Well',
+    colorId: 'ww',
+    color: '#019588',
+    cards: [{ id: 0, title: 'Card: This is a test one' }],
+  },
+  {
+    id: 2,
+    name: 'To Improve',
+    colorId: 'ti',
+    color: '#e91e63',
+    cards: [{ id: 0, title: 'Card: This is a test two' }],
+  },
+  {
+    id: 3,
+    name: 'Action Items',
+    colorId: 'ai',
+    color: '#9c28b0',
+    cards: [{ id: 0, title: 'Card: This is a test three' }],
+  },
 ];
 
-function Category(props) {
-  return (
-    <div>
-      <h2 className="h4">{props.name}</h2>
-      {props.categories.map(category => {
-        const key = "category-" + category.id;
-        const labelId = "change-category-" + category.id;
-        if (category.name === props.name) {
-          return <table className="table">
-          <tbody>
-            <tr key={key}>
-              <td className="form-inline">
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm"
-                    onClick={e => this.addCard(props.id, e.targer.value)}>
-                    +
-                  </button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                  <Card labelId={labelId} key={key} category_id={category.id} name={category.name} colorId={category.colorId} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                  <ControlCard labelId={labelId} key={key} category_id={category.id} name={category.name} colorId={category.colorId} />
-              </td>
-            </tr>
-          </tbody>
-        </table>;
-        } else return null;
-      })}
-    </div>
-  );
+function AddNewCard(props) {
+  console.log("AddNewCard: ", props);
+  return <div>
+      New Card Input Here for Category {props.category_id} of {props.cards.length}
+      <div>
+        <textarea className="form-input" category_id={props.category_id} value={props.input} onChange={props.handleChange} />
+        <button onClick={props.handleSubmitNewCard}>ADD</button>
+        <button onClick={props.deleteNewCard}>delete</button>
+      </div>
+    </div>;
 }
 
+function Card(props) {
+  console.log("Card: ", props);
+  return (
+    <div>
+      <div card_id={props.id}>
+        <p>{props.title}</p>
+      </div>
+      <div>
+        <button>&lt;</button>
+        <button>x</button>
+        <button>&gt;</button>
+      </div>
+    </div>
+  )
+}
 class App extends Component {
   state = {
-    categories: categories
-  }
-  addCard = (id, name) => {
-    this.setState({
-      categories: this.state.categories.map(category => {
-        console.log(category);
-        return category;
-      }),
-    });
+    categories: categories,
+    showAddCard: false,
+    showButton: '+',
+    input: ''
   };
-  moveRight = (id, name) => {
-    this.setState({
-      categories: this.state.categories.map(category => {
-        if (category.id === id) category.name = name;
-        return category;
-      }),
-    });
+  onClickNewCard = id => {
+    console.log('onClickNewCard: ', id, this.state)
+    if (this.state.id === id)
+      this.setState({
+        showAddCard: !this.state.showAddCard,
+        showButton: "-"
+      })
   };
-  moveLeft = (id, category) => {
-    this.setState({
-      categories: this.state.categories.map(category => {
-        if (category.id === id) category.name = category;
-        return category;
-      }),
-    });
+  handleSubmitNewCard(e) {
+
   };
-  delete = id => {
-    this.setState({
-      categories: this.state.categories.filter(category => {
-        return category.id !== id;
-      }),
-    });
+  deleteNewCard(e) {
+    e.preventDetaul();
+    this.setState({showAddCard: !this.state.showAddCard})
   };
   render() {
+    console.log("Main render: ", this.state);
     return (
-      <div className="container">
-        <h1>Retrospective Board</h1>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <Category
-                  name="Went Well"
-                  categories={this.state.categories}
-                  addCard={this.addCard}
-                  moveLeft={this.moveLeft}
-                  delete={this.delete}
-                  moveRight={this.moveRight}
-                />
-              </td>
-              <td>
-                <Category
-                  name="To Improve"
-                  categories={this.state.categories}
-                  addCard={this.addCard}
-                  moveLeft={this.moveLeft}
-                  delete={this.delete}
-                  moveRight={this.moveRight}
-                />
-              </td>
-              <td>
-                <Category
-                  name="Action Items"
-                  categories={this.state.categories}
-                  addCard={this.addCard}
-                  moveLeft={this.moveLeft}
-                  delete={this.delete}
-                  moveRight={this.moveRight}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+    <div className="container">
+      <h1>Retrospective Board</h1>
+        {this.state.categories && this.state.categories.map((category, index) => {
+          console.log(category);
+          return (
+            <div category_id={category.id}>
+              <h2>{category.name}</h2>
+              <div>
+                <button onClick={() => this.onClickNewCard(category.id)}>{this.state.showButton}</button>
+              </div>
+              <div>
+                {category.cards && category.cards.map((card, index) => {
+                  console.log(card);
+                  return (<Card id={card.id} title={card.title}/>)
+                })}
+              </div>              
+              <div>
+                {this.state.showAddCard && <AddNewCard category_id={category.id} cards={category.cards} />}
+              </div>
+            </div>
+          )
+        })}
+    </div>
+    )
+  };
 }
 
 export default App;
