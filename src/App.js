@@ -59,23 +59,32 @@ class App extends Component {
     categories: categories,
     showAddCard: false,
     inputValue: '',
-    inputCategory: null,
+    inputCategory: 0,
     cardAdded: {}
   };
   onClickNewCard(category_id) {
       console.log(category_id);
   };
-  handleChange = (value, category_id) => {
-      console.log("handleChange: ", value, category_id)
+  handleChange = (e) => {
+    console.log("handleChange: ", this.state);
     this.setState({
-        inputValue: value,
-        inputCategory: category_id
+        inputValue: e.target.value,
+        inputCategory: this.state.inputCategory
     })
   };
-  handleSubmitNewCard = () => {
-      console.log(this.state.categories[0].cards);
-      //e.preventDefault();
-      this.setState({cards: this.cards.push({card_id: 1, title: this.state.inputValue})})
+  handleSubmitNewCard = (e) => {
+      console.log(this.state);
+      e.preventDefault();
+      this.setState({
+        categories: this.state.categories.map((category, index) => {
+              if (category.category_id === this.state.categories[0].category_id){
+                  category.cards.push({ card_id: category.cards.length, title: this.state.inputValue})
+              }
+              return category;
+          }),
+        inputValue: '',
+        inputCategory: null
+        })
   };
   deleteNewCard(e) {
     e.preventDetaul();
@@ -92,7 +101,6 @@ class App extends Component {
   };
   render() {
     console.log("Main render: ", this.state);
-    const category_id = this.state.categories[0].category_id;
     return (
     <div className="container">
         <h1>Retrospective Board</h1>
@@ -107,11 +115,12 @@ class App extends Component {
                     <textarea
                         className="form-input"
                         value={this.state.inputValue}
-                        onChange={e => this.handleChange(e.target.value, category_id)}
+                        category_id={0}
+                        onChange={this.handleChange}
                     />
                 </div>
                 <div className="AddDelete">
-                    <button onClick={this.handleSubmitNewCard}>ADD</button>
+                    <button onClick={(e) => this.handleSubmitNewCard}>ADD</button>
                     <button onClick={this.deleteNewCard}>delete</button>
                 </div>
             </form>
