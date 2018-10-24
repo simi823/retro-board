@@ -65,16 +65,17 @@ class App extends Component {
   onClickNewCard(category_id) {
       console.log(category_id);
   };
-  handleChange = (e, category_id) => {
+  handleChange = (value, category_id) => {
+      console.log("handleChange: ", value, category_id)
     this.setState({
-        inputValue: e.target.value,
+        inputValue: value,
         inputCategory: category_id
     })
   };
-  handleSubmitNewCard = (value, category_id) => {
-      console.log("NewCard Submit value: " + this.state.inputValue);
+  handleSubmitNewCard = () => {
+      console.log(this.state.categories[0].cards);
       //e.preventDefault();
-      this.setState({cards: this.cards.push({id: category_id+100, title: this.state.inputValue})})
+      this.setState({cards: this.cards.push({card_id: 1, title: this.state.inputValue})})
   };
   deleteNewCard(e) {
     e.preventDetaul();
@@ -91,6 +92,7 @@ class App extends Component {
   };
   render() {
     console.log("Main render: ", this.state);
+    const category_id = this.state.categories[0].category_id;
     return (
     <div className="container">
         <h1>Retrospective Board</h1>
@@ -105,7 +107,7 @@ class App extends Component {
                     <textarea
                         className="form-input"
                         value={this.state.inputValue}
-                        onChange={() => this.handleChange()}
+                        onChange={e => this.handleChange(e.target.value, category_id)}
                     />
                 </div>
                 <div className="AddDelete">
