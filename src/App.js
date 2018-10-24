@@ -3,38 +3,40 @@ import './retro-board.css';
 
 const categories = [
   {
-    id: 1,
+    category_id: 1,
     name: 'Went Well',
     colorId: 'ww',
     color: '#019588',
-    cards: [{ id: 0, title: 'Card: This is a test one' }],
+    cards: [{ card_id: 0, title: 'Card: This is a test one' }],
   },
   {
-    id: 2,
+    category_id: 2,
     name: 'To Improve',
     colorId: 'ti',
     color: '#e91e63',
-    cards: [{ id: 0, title: 'Card: This is a test two' }],
+    cards: [{ card_id: 0, title: 'Card: This is a test two' }],
   },
   {
-    id: 3,
+    category_id: 3,
     name: 'Action Items',
     colorId: 'ai',
     color: '#9c28b0',
-    cards: [{ id: 0, title: 'Card: This is a test three' }],
+    cards: [{ card_id: 0, title: 'Card: This is a test three' }],
   },
 ];
 
 function AddNewCard(props) {
   console.log("AddNewCard: ", props);
-  return <div>
-      New Card Input Here for Category {props.category_id} of {props.cards.length}
+  return (
       <div>
-        <textarea className="form-input" category_id={props.category_id} value={props.input} onChange={props.handleChange} />
-        <button onClick={props.handleSubmitNewCard}>ADD</button>
-        <button onClick={props.deleteNewCard}>delete</button>
+        New Card Input Here for Category {props.category_id} of {props.cards.length}
+        <div>
+          <textarea className="form-input" category_id={props.category_id} value={props.input} onChange={props.handleChange} />
+          <button onClick={props.handleSubmitNewCard}>ADD</button>
+          <button onClick={props.deleteNewCard}>delete</button>
+        </div>
       </div>
-    </div>;
+  );
 }
 
 function Card(props) {
@@ -56,18 +58,23 @@ class App extends Component {
   state = {
     categories: categories,
     showAddCard: false,
-    showButton: '+',
-    input: ''
+    inputValue: '',
+    inputCategory: null,
+    cardAdded: {}
   };
-  onClickNewCard = id => {
-    console.log('onClickNewCard: ', id, this.state);
-      this.setState({
-        showAddCard: !this.state.showAddCard,
-        showButton: "-"
-      })
+  onClickNewCard(category_id) {
+      console.log(category_id);
   };
-  handleSubmitNewCard(e) {
-    console.log(this.state);
+  handleChange = (e, category_id) => {
+    this.setState({
+        inputValue: e.target.value,
+        inputCategory: category_id
+    })
+  };
+  handleSubmitNewCard = (value, category_id) => {
+      console.log("NewCard Submit value: " + this.state.inputValue);
+      //e.preventDefault();
+      this.setState({cards: this.cards.push({id: category_id+100, title: this.state.inputValue})})
   };
   deleteNewCard(e) {
     e.preventDetaul();
@@ -86,27 +93,42 @@ class App extends Component {
     console.log("Main render: ", this.state);
     return (
     <div className="container">
-      <h1>Retrospective Board</h1>
-        {this.state.categories && this.state.categories.map((category, index) => {
-          console.log(category);
-          return (
-            <div key={category.id}>
-              <h2>{category.name}</h2>
-              <div>
-                <button onClick={() => this.onClickNewCard(category.id)}>{this.state.showButton}</button>
-              </div>
-              <div>
-                {category.cards && category.cards.map((card, index) => {
-                  console.log(card);
-                  return (<Card key={card.id} card_id={card.id} title={card.title}/>)
-                })}
-              </div>              
-              <div>
-                {this.state.showAddCard && <AddNewCard key={category.id} category_id={category.id} cards={category.cards} />}
-              </div>
-            </div>
-          )
-        })}
+        <h1>Retrospective Board</h1>
+        <h2>Went Well</h2>
+        <div>
+            <button onClick={this.onClickNewCard()}>+</button>
+        </div>
+        <div>
+            <form className="form" onSubmit={this.handleSubmitNewCard}>
+                <label className="newCardLabel">Add New Card</label>
+                <div className="inputValueForNewCard">
+                    <textarea
+                        className="form-input"
+                        value={this.state.inputValue}
+                        onChange={() => this.handleChange()}
+                    />
+                </div>
+                <div className="AddDelete">
+                    <button onClick={this.handleSubmitNewCard}>ADD</button>
+                    <button onClick={this.deleteNewCard}>delete</button>
+                </div>
+            </form>
+        </div>
+        <div>
+            {categories[0].cards && categories[0].cards.map((card, index) => {
+                console.log(card);
+                return (
+                    <Card
+                        key={card.card_id}
+                        card_id={card.card_id}
+                        title={card.title}
+                        moveLeft={this.moveLeft}
+                        moveRight={this.moveRight}
+                        deleteCard={this.deleteCard}
+                    />
+                )
+            })}
+        </div>
     </div>
     )
   };
