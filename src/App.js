@@ -36,9 +36,9 @@ function Card(props) {
         <p>{props.title}</p>
       </div>
       <div>
-        <button onClick={props.moveLeft(props.card_id)}>&lt;</button>
-        <button onClick={props.deleteCard(props.card_id)}>x</button>
-        <button onClick={props.moveRight(props.card_id)}>&gt;</button>
+        <button onClick={props.moveLeft(props.category_id, props.card_id)}>&lt;</button>
+        <button onClick={props.deleteCard(props.category_id, props.card_id)}>x</button>
+        <button onClick={props.moveRight(props.category_id, props.card_id)}>&gt;</button>
       </div>
     </div>
   )
@@ -78,14 +78,23 @@ class App extends Component {
         inputValue: ''
     })
   };
-  moveLeft() {
-    console.log(this.state);
+  moveLeft = (from_category_id, to_category_id, card_id) => {
+    console.log("moveLeft: ", this.state);
   };
-  moveRight() {
-    console.log(this.state);
+  moveRight = (from_category_id, to_category_id, card_id) => {
+    console.log("moveRight: ", this.state);
   };
-  deleteCard() {
-    console.log(this.state);
+  deleteCard = (category_idx, card_id) => {
+    console.log("deleteCard: ", category_idx, card_id);
+    this.setState({
+        categories: this.state.categories.map((category, index) => {
+            if (category.category_id === this.state.categories[category_idx].category_id) {
+                return category.cards.filter((card, index) => {
+                    return card.card_id !== card_id;
+                })
+            }
+        }, console.log(this.state.categories))
+    })
   };
   render() {
     console.log("Main render: ", this.state);
@@ -119,14 +128,16 @@ class App extends Component {
             {categories[0].cards && categories[0].cards.map((card, index) => {
                 console.log(card);
                 return (
-                    <Card
-                        key={card.card_id}
-                        card_id={card.card_id}
-                        title={card.title}
-                        moveLeft={this.moveLeft}
-                        moveRight={this.moveRight}
-                        deleteCard={this.deleteCard}
-                    />
+                    <div>
+                        <div key={card.card_id}>
+                            <p>{card.title}</p>
+                        </div>
+                        <div>
+                            <button onClick={this.moveLeft(0, 1, card.card_id)}>&lt;</button>
+                            <button onClick={e => this.deleteCard(0, card.card_id)}>x</button>
+                            <button onClick={this.moveRight(0, categories.length, card.card_id)}>&gt;</button>
+                        </div>
+                    </div>
                 )
             })}
         </div>
