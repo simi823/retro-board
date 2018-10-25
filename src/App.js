@@ -50,7 +50,9 @@ class App extends Component {
     showAddCard: false,
     inputValue: '',
     inputCategory: 0,
-    cardAdded: {}
+    cardAdded: {},
+    newCatIndex: null,
+    cardToMove: null,
     };
 
     handleChange = (e) => {
@@ -84,11 +86,66 @@ class App extends Component {
     };
 
     moveLeft = (cat_index, card_id) => {
-    console.log("moveLeft: ", this.state);
+        if (cat_index === 0) {
+            this.setState({newCatIndex: this.state.categories.length - 1});
+        } else {
+            this.setState({newCatIndex: cat_index - 1});
+        } 
+        this.setState({
+            categories: this.state.categories.map((category, index) => {
+                // Remove from current Category
+                if (cat_index === index) {
+                    let cardToMoveIndex = category.cards.findIndex(x => x.card_id === card_id);
+                    this.setState({cardToMove: category.cards[cardToMoveIndex]});
+                    category.cards = category.cards.filter((card, card_index) => {
+                        return card.card_id !== card_id;
+                    })
+                    return category;
+                }
+            })
+        });
+        this.setState({
+            categories: this.state.categories.map((category, index) => {
+                // Move to new Category
+                if(cat_index === this.state.newCatIndex) {
+                    category.cards = category.cards.push(this.state.cardToMove);
+                }
+                return category;
+            }),
+            cardToMove: null
+        })
     };
 
     moveRight = (cat_index, card_id) => {
-    console.log("moveRight: ", this.state);
+        if (cat_index === this.state.categories.length - 1) {
+            this.setState({ newCatIndex: 0 });
+        } else {
+            this.setState({ newCatIndex: cat_index + 1 });
+        };
+        console.log("newCatIndex: " + this.state.newCatIndex);
+        this.setState({
+            categories: this.state.categories.map((category, index) => {
+                // Remove from current Category
+                if (cat_index === index) {
+                    let cardToMoveIndex = category.cards.findIndex(x => x.card_id === card_id);
+                    this.setState({ cardToMove: category.cards[cardToMoveIndex] });
+                    category.cards = category.cards.filter((card, card_index) => {
+                        return card.card_id !== card_id;
+                    })
+                }
+                return category;
+            })
+        });
+        this.setState({
+            categories: this.state.categories.map((category, index) => {
+                // Move to new Category
+                if (cat_index === this.state.newCatIndex) {
+                    category.cards = category.cards.push(this.state.cardToMove);
+                }
+                return category;
+            }),
+            cardToMove: null
+        })
     };
 
     deleteCard = (cat_index, card_id) => {
