@@ -86,34 +86,27 @@ class App extends Component {
     };
 
     moveLeft = (cat_index, card_id) => {
-        if (cat_index === 0) {
-            this.setState({newCatIndex: this.state.categories.length - 1});
-        } else {
-            this.setState({newCatIndex: cat_index - 1});
-        } 
+        this.setState({
+            newCatIndex: (cat_index === 0) ? this.state.categories.length - 1 : cat_index - 1
+        });
+        console.log(this.state.newCatIndex);
         this.setState({
             categories: this.state.categories.map((category, index) => {
-                // Remove from current Category
                 if (cat_index === index) {
+                    // Remove from current Category
                     let cardToMoveIndex = category.cards.findIndex(x => x.card_id === card_id);
                     this.setState({cardToMove: category.cards[cardToMoveIndex]});
                     category.cards = category.cards.filter((card, card_index) => {
                         return card.card_id !== card_id;
                     })
-                    return category;
-                }
-            })
-        });
-        this.setState({
-            categories: this.state.categories.map((category, index) => {
-                // Move to new Category
-                if(cat_index === this.state.newCatIndex) {
+                } else if (cat_index === this.state.newCatIndex) {
+                    // Add to new Category
                     category.cards = category.cards.push(this.state.cardToMove);
-                }
+                };
                 return category;
             }),
             cardToMove: null
-        })
+        });
     };
 
     moveRight = (cat_index, card_id) => {
