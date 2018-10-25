@@ -44,101 +44,105 @@ function Card(props) {
   )
 }
 class App extends Component {
-  state = {
+    state = {
     categories: categories,
+    showAddCardCategory: null,
     showAddCard: false,
-    showAddSign: '+',
     inputValue: '',
     inputCategory: 0,
     cardAdded: {}
-  };
-  handleChange = (e) => {
+    };
+
+    handleChange = (e) => {
     this.setState({
         inputValue: e.target.value,
         inputCategory: this.state.inputCategory
     })
-  };
-  handleSubmitNewCard = (e) => {
-      e.preventDefault();
-      this.setState({
+    };
+
+    handleSubmitNewCard = (e, cat_index) => {
+        e.preventDefault();
+        this.setState({
         categories: this.state.categories.map((category, index) => {
-              if (category.category_id === this.state.categories[0].category_id){
-                  category.cards.push({ card_id: category.cards.length, title: this.state.inputValue})
-              }
-              return category;
-          }),
+            if (category.category_id === this.state.categories[cat_index].category_id){
+                    category.cards.push({ card_id: category.cards.length, title: this.state.inputValue})
+                }
+                return category;
+            }),
         inputValue: '',
         inputCategory: null,
-        showAddCard: !this.state.showAddCard
+        showAddCard: !this.state.showAddCard,
+        showAddCardCategory: !this.state.showAddCardCategory
         })
-  };
-  deleteNewCard = () => {
+    };
+
+    deleteNewCard = () => {
     this.setState({
         showAddCard: !this.state.showAddCard,
         inputValue: ''
     })
-  };
-  moveLeft = (from_category_id, to_category_id, card_id) => {
+    };
+
+    moveLeft = (cat_index, card_id) => {
     console.log("moveLeft: ", this.state);
-  };
-  moveRight = (from_category_id, to_category_id, card_id) => {
+    };
+
+    moveRight = (cat_index, card_id) => {
     console.log("moveRight: ", this.state);
-  };
-  deleteCard = (category_idx, card_id) => {
-    console.log("deleteCard: ", category_idx, card_id);
-    this.setState({
-        categories: this.state.categories.map((category, index) => {
-            if (category.category_id === this.state.categories[category_idx].category_id) {
-                return category.cards.filter((card, index) => {
-                    return card.card_id !== card_id;
-                })
-            }
-        }, console.log(this.state.categories))
-    })
-  };
+    };
+
+    deleteCard = (cat_index, card_id) => {
+        this.setState({
+            categories: this.state.categories.map((category, index) => {
+                if (cat_index === index)
+                    category.cards = category.cards.filter((card, index) => {
+                        return card.card_id !== card_id;
+                    })
+                return category;
+            })
+        })
+    };
+
   render() {
     console.log("Main render: ", this.state);
     const { showAddCard } = this.state;
     return (
-    <div className="container">
+    <div className="content">
         <h1>Retrospective Board</h1>
-        <h2>Went Well</h2>
-        <div>
-            <button onClick={() => this.setState({ showAddCard: !this.state.showAddCard})}>{this.state.showAddSign}</button>
-            { showAddCard ? 
-                <div>
-                    <label className="newCardLabel">Add New Card</label>
-                    <div className="inputValueForNewCard">
-                        <textarea
-                            className="form-input"
-                            value={this.state.inputValue}
-                            category_id={0}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="AddDelete">
-                        <button type="submit" onClick={this.handleSubmitNewCard}>ADD</button>
-                        <button type="delete" onClick={this.deleteNewCard}>delete</button>
-                    </div>
-                </div>
-                : null
-            }
-        </div>
-        <div>
-            {categories[0].cards && categories[0].cards.map((card, index) => {
-                console.log(card);
-                return (
-                    <div>
-                        <div key={card.card_id}>
-                            <p>{card.title}</p>
+            <div className="RetroBoad">
+            {this.state.categories.map((category, cat_index) => {
+                let cardBackgroundColorClassName = "RetroBoardCategory-" + category.category_id;
+                return <div className="RetroBoardCategory" key={category.category_id}>
+                        <h2>{category.name}</h2>
+                        <div className="Retro button button-new">
+                            <button onClick={() => this.setState({ showAddCard: !this.state.showAddCard, showAddCardCategory: cat_index })}>+</button>
                         </div>
-                        <div>
-                            <button onClick={this.moveLeft(0, 1, card.card_id)}>&lt;</button>
-                            <button onClick={e => this.deleteCard(0, card.card_id)}>x</button>
-                            <button onClick={this.moveRight(0, categories.length, card.card_id)}>&gt;</button>
+                        {(showAddCard && this.state.showAddCardCategory === cat_index) ?
+                        <div className="Retro">
+                            <div className={cardBackgroundColorClassName}>>
+                                <textarea className="textbox" value={'Enter Text here' ? this.state.inputValue : null} category_id={0} onChange={this.handleChange} />
+                            </div>
+                            <div className="ButtonGroup">
+                                <button type="submit" onClick={e => this.handleSubmitNewCard(e, cat_index)}>ADD</button>
+                                <button type="delete" onClick={e => this.deleteNewCard(e, cat_index)}>delete</button>
+                            </div>
                         </div>
-                    </div>
-                )
+                        : null}
+                        <div className = { cardBackgroundColorClassName }>
+                            {category.cards && category.cards.map((card, card_index) => {
+                            return <div key={card_index} className="Retro">
+                                        <div key={card.card_id}>
+                                            <p>{card.title}</p>
+                                        </div>
+                                        <div className="Retro ButtonGroup">
+                                            <button onClick={e => this.moveLeft(cat_index, card.card_id)}>&lt;</button>
+                                            <button onClick={e => this.deleteCard(cat_index, card.card_id)}>x</button>
+                                            <button onClick={e => this.moveRight(cat_index, card.card_id)}>&gt;</button>
+                                        </div>
+                                    </div>;
+                                })}
+                        </div>
+                    </div>;
             })}
         </div>
     </div>
