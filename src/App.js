@@ -5,43 +5,37 @@ const categories = [
   {
     category_id: 1,
     name: 'Went Well',
-    colorId: 'ww',
-    color: '#019588',
     showNewCard: false,
-    cards: [{ card_id: 0, title: 'Card: This is a test one' }],
+    cards: [],
   },
   {
     category_id: 2,
     name: 'To Improve',
-    colorId: 'ti',
-    color: '#e91e63',
     showNewCard: false,
-    cards: [{ card_id: 0, title: 'Card: This is a test two' }],
+    cards: [],
   },
   {
     category_id: 3,
     name: 'Action Items',
-    colorId: 'ai',
-    color: '#9c28b0',
     showNewCard: false,
-    cards: [{ card_id: 0, title: 'Card: This is a test three' }],
+    cards: [],
   },
 ];
 
 function Card(props) {
-  console.log("Card: ", props);
+    console.log(props);
   return (
-    <div>
-      <div key={props.card_id}>
-        <p>{props.title}</p>
+      <div key={props.card_index} className="Retro">
+          <div key={props.card.card_id}>
+              <p>{props.card.title}</p>
+          </div>
+          <div className="Retro ButtonGroup">
+              <button onClick={e => props.moveLeft(props.cat_index, props.card.card_id)}>&lt;</button>
+              <button onClick={e => props.deleteCard(props.cat_index, props.card.card_id)}>x</button>
+              <button onClick={e => props.moveRight(props.cat_index, props.card.card_id)}>&gt;</button>
+          </div>
       </div>
-      <div>
-        <button onClick={props.moveLeft(props.category_id, props.card_id)}>&lt;</button>
-        <button onClick={props.deleteCard(props.category_id, props.card_id)}>x</button>
-        <button onClick={props.moveRight(props.category_id, props.card_id)}>&gt;</button>
-      </div>
-    </div>
-  )
+    )
 }
 class App extends Component {
     state = {
@@ -86,59 +80,29 @@ class App extends Component {
     };
 
     moveLeft = (cat_index, card_id) => {
-        this.setState({
-            newCatIndex: (cat_index === 0) ? this.state.categories.length - 1 : cat_index - 1
-        });
-        console.log(this.state.newCatIndex);
+        const newCatIndex = (cat_index === 0) ? this.state.categories.length - 1 : cat_index - 1;
+        const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => {return card.card_id === card_id ? card : null;});
         this.setState({
             categories: this.state.categories.map((category, index) => {
-                if (cat_index === index) {
-                    // Remove from current Category
-                    let cardToMoveIndex = category.cards.findIndex(x => x.card_id === card_id);
-                    this.setState({cardToMove: category.cards[cardToMoveIndex]});
-                    category.cards = category.cards.filter((card, card_index) => {
-                        return card.card_id !== card_id;
-                    })
-                } else if (cat_index === this.state.newCatIndex) {
-                    // Add to new Category
-                    category.cards = category.cards.push(this.state.cardToMove);
-                };
+                if (category.category_id === this.state.categories[newCatIndex].category_id) {
+                    category.cards.push(cardToMove[0]);
+                }
                 return category;
             }),
-            cardToMove: null
-        });
+        }, this.deleteCard(cat_index, card_id));
     };
 
     moveRight = (cat_index, card_id) => {
-        if (cat_index === this.state.categories.length - 1) {
-            this.setState({ newCatIndex: 0 });
-        } else {
-            this.setState({ newCatIndex: cat_index + 1 });
-        };
-        console.log("newCatIndex: " + this.state.newCatIndex);
+        const newCatIndex = (cat_index === this.state.categories.length - 1) ? 0 : cat_index + 1;
+        const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => { return card.card_id === card_id ? card : null; });
         this.setState({
             categories: this.state.categories.map((category, index) => {
-                // Remove from current Category
-                if (cat_index === index) {
-                    let cardToMoveIndex = category.cards.findIndex(x => x.card_id === card_id);
-                    this.setState({ cardToMove: category.cards[cardToMoveIndex] });
-                    category.cards = category.cards.filter((card, card_index) => {
-                        return card.card_id !== card_id;
-                    })
-                }
-                return category;
-            })
-        });
-        this.setState({
-            categories: this.state.categories.map((category, index) => {
-                // Move to new Category
-                if (cat_index === this.state.newCatIndex) {
-                    category.cards = category.cards.push(this.state.cardToMove);
+                if (category.category_id === this.state.categories[newCatIndex].category_id) {
+                    category.cards.push(cardToMove[0]);
                 }
                 return category;
             }),
-            cardToMove: null
-        })
+        }, this.deleteCard(cat_index, card_id));
     };
 
     deleteCard = (cat_index, card_id) => {
@@ -154,7 +118,6 @@ class App extends Component {
     };
 
   render() {
-    console.log("Main render: ", this.state);
     const { showAddCard } = this.state;
     return (
     <div className="content">
@@ -181,16 +144,26 @@ class App extends Component {
                         <div className = { cardBackgroundColorClassName }>
                             {category.cards && category.cards.map((card, card_index) => {
                             return <div key={card_index} className="Retro">
-                                        <div key={card.card_id}>
-                                            <p>{card.title}</p>
-                                        </div>
-                                        <div className="Retro ButtonGroup">
-                                            <button onClick={e => this.moveLeft(cat_index, card.card_id)}>&lt;</button>
-                                            <button onClick={e => this.deleteCard(cat_index, card.card_id)}>x</button>
-                                            <button onClick={e => this.moveRight(cat_index, card.card_id)}>&gt;</button>
-                                        </div>
-                                    </div>;
-                                })}
+                                <div key={card.card_id}>
+                                    <p>{card.title}</p>
+                                </div>
+                                <div className="Retro ButtonGroup">
+                                    <button onClick={e => this.moveLeft(cat_index, card.card_id)}>&lt;</button>
+                                    <button onClick={e => this.deleteCard(cat_index, card.card_id)}>x</button>
+                                    <button onClick={e => this.moveRight(cat_index, card.card_id)}>&gt;</button>
+                                </div>
+                            </div>
+
+/*                                     <Card 
+                                    card={card} 
+                                    card_index={card_index}
+                                    moveLeft={this.moveLeft}
+                                    deleteCard={this.deleteCard}
+                                    moveRight={this.moveRight}
+                                    categories={this.state.categories}
+                                    /> */
+                                }
+                            )}
                         </div>
                     </div>;
             })}
