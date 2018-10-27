@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Card from './components/Card/Card'
+import AddCard from './components/AddCard/AddCard'
 import './retro-board.css';
 
 const categories = [
@@ -21,22 +23,6 @@ const categories = [
     cards: [],
   },
 ];
-
-function Card(props) {
-    console.log(props);
-  return (
-      <div key={props.card_index} className="Retro">
-          <div key={props.card.card_id}>
-              <p>{props.card.title}</p>
-          </div>
-          <div className="Retro ButtonGroup">
-              <button onClick={e => props.moveLeft(props.cat_index, props.card.card_id)}>&lt;</button>
-              <button onClick={e => props.deleteCard(props.cat_index, props.card.card_id)}>x</button>
-              <button onClick={e => props.moveRight(props.cat_index, props.card.card_id)}>&gt;</button>
-          </div>
-      </div>
-    )
-}
 class App extends Component {
     state = {
     categories: categories,
@@ -45,8 +31,8 @@ class App extends Component {
     inputValue: '',
     inputCategory: 0,
     cardAdded: {},
-    newCatIndex: null,
     cardToMove: null,
+    cardBackgroundColorClassName: "RetroBoardCategory-"
     };
 
     handleChange = (e) => {
@@ -56,7 +42,7 @@ class App extends Component {
     })
     };
 
-    handleSubmitNewCard = (e, cat_index) => {
+    addNewCard = (e, cat_index) => {
         e.preventDefault();
         this.setState({
         categories: this.state.categories.map((category, index) => {
@@ -79,12 +65,11 @@ class App extends Component {
     })
     };
 
-    moveLeft = (cat_index, card_id) => {
-        const newCatIndex = (cat_index === 0) ? this.state.categories.length - 1 : cat_index - 1;
+    moveLeft = (cat_index, new_cat_index, card_id) => {
         const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => {return card.card_id === card_id ? card : null;});
         this.setState({
             categories: this.state.categories.map((category, index) => {
-                if (category.category_id === this.state.categories[newCatIndex].category_id) {
+                if (category.category_id === this.state.categories[new_cat_index].category_id) {
                     category.cards.push(cardToMove[0]);
                 }
                 return category;
@@ -92,12 +77,12 @@ class App extends Component {
         }, this.deleteCard(cat_index, card_id));
     };
 
-    moveRight = (cat_index, card_id) => {
-        const newCatIndex = (cat_index === this.state.categories.length - 1) ? 0 : cat_index + 1;
+    moveRight = (cat_index, new_cat_index, card_id) => {
+        console.log( cat_index, new_cat_index, card_id);
         const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => { return card.card_id === card_id ? card : null; });
         this.setState({
             categories: this.state.categories.map((category, index) => {
-                if (category.category_id === this.state.categories[newCatIndex].category_id) {
+                if (category.category_id === this.state.categories[new_cat_index].category_id) {
                     category.cards.push(cardToMove[0]);
                 }
                 return category;
@@ -109,7 +94,7 @@ class App extends Component {
         this.setState({
             categories: this.state.categories.map((category, index) => {
                 if (cat_index === index)
-                    category.cards = category.cards.filter((card, index) => {
+                    category.cards = category.cards.filter((card, idx) => {
                         return card.card_id !== card_id;
                     })
                 return category;
@@ -118,50 +103,42 @@ class App extends Component {
     };
 
   render() {
-    const { showAddCard } = this.state;
+      const { showAddCard } = this.state;
     return (
     <div className="content">
         <h1>Retrospective Board</h1>
             <div className="RetroBoad">
             {this.state.categories.map((category, cat_index) => {
-                let cardBackgroundColorClassName = "RetroBoardCategory-" + category.category_id;
+                const cardBackgroundColorClassName = "RetroBoardCategory-" + category.category_id;
                 return <div className="RetroBoardCategory" key={category.category_id}>
                         <h2>{category.name}</h2>
                         <div className="Retro button button-new">
                             <button onClick={() => this.setState({ showAddCard: !this.state.showAddCard, showAddCardCategory: cat_index })}>+</button>
                         </div>
-                        {(showAddCard && this.state.showAddCardCategory === cat_index) ?
-                        <div className="Retro">
-                            <div className={cardBackgroundColorClassName}>>
-                                <textarea className="textbox" value={'Enter Text here' ? this.state.inputValue : null} category_id={0} onChange={this.handleChange} />
-                            </div>
-                            <div className="ButtonGroup">
-                                <button type="submit" onClick={e => this.handleSubmitNewCard(e, cat_index)}>ADD</button>
-                                <button type="delete" onClick={e => this.deleteNewCard(e, cat_index)}>delete</button>
-                            </div>
-                        </div>
+                        {(showAddCard && this.state.showAddCardCategory === cat_index) ? 
+                        <AddCard 
+                        cardBackgroundColorClassName={cardBackgroundColorClassName}
+                        cat_index={cat_index}
+                        addNewCard={this.addNewCard}
+                        deleteNewCard={this.deleteNewCard}
+                        inputValue={this.inputValue}
+                        handleChange={this.handleChange}
+                        />
                         : null}
                         <div className = { cardBackgroundColorClassName }>
                             {category.cards && category.cards.map((card, card_index) => {
-                            return <div key={card_index} className="Retro">
-                                <div key={card.card_id}>
-                                    <p>{card.title}</p>
-                                </div>
-                                <div className="Retro ButtonGroup">
-                                    <button onClick={e => this.moveLeft(cat_index, card.card_id)}>&lt;</button>
-                                    <button onClick={e => this.deleteCard(cat_index, card.card_id)}>x</button>
-                                    <button onClick={e => this.moveRight(cat_index, card.card_id)}>&gt;</button>
-                                </div>
-                            </div>
-
-/*                                     <Card 
-                                    card={card} 
-                                    card_index={card_index}
-                                    moveLeft={this.moveLeft}
-                                    deleteCard={this.deleteCard}
-                                    moveRight={this.moveRight}
-                                    categories={this.state.categories}
-                                    /> */
+                                return <Card 
+                                card={card} 
+                                card_id={card.card_id} 
+                                card_index={card_index}
+                                cat_index={cat_index}
+                                new_right_cat_index={cat_index === this.state.categories.length - 1 ? 0 : cat_index + 1}
+                                new_left_cat_index={cat_index === 0 ? this.state.categories.length - 1 : cat_index - 1}
+                                moveLeft={this.moveLeft}
+                                deleteCard={this.deleteCard}
+                                moveRight={this.moveRight}
+                                categories={this.state.categories}
+                                />
                                 }
                             )}
                         </div>
