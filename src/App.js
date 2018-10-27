@@ -36,26 +36,30 @@ class App extends Component {
     };
 
     handleChange = (e) => {
-    this.setState({
-        inputValue: e.target.value,
-        inputCategory: this.state.inputCategory
-    })
+        this.setState({ 
+            inputValue: e.target.value,
+            inputCategory: this.state.inputCategory
+        });
     };
 
     addNewCard = (e, cat_index) => {
         e.preventDefault();
-        this.setState({
-        categories: this.state.categories.map((category, index) => {
-            if (category.category_id === this.state.categories[cat_index].category_id){
-                    category.cards.push({ card_id: category.cards.length, title: this.state.inputValue})
-                }
-                return category;
-            }),
-        inputValue: '',
-        inputCategory: null,
-        showAddCard: !this.state.showAddCard,
-        showAddCardCategory: !this.state.showAddCardCategory
-        })
+        if (this.state.inputValue) {
+            this.setState({
+            categories: this.state.categories.map((category, index) => {
+                if (category.category_id === this.state.categories[cat_index].category_id){
+                        category.cards.push({ card_id: category.cards.length, title: this.state.inputValue})
+                    }
+                    return category;
+                }),
+            inputValue: '',
+            inputCategory: null,
+            showAddCard: !this.state.showAddCard,
+            showAddCardCategory: !this.state.showAddCardCategory
+            })
+        } else {
+            alert("New Card Cannot be Empty!!")
+        }
     };
 
     deleteNewCard = () => {
