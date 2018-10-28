@@ -3,7 +3,6 @@ import '../../retro-board.css'
 
 
 function AddCard(props) {
-    console.log(props)
     return <div className="Retro RetroBoardCategory textbox">
         <div className={props.cardBackgroundColorClassName}>
             <textarea className="textbox" value={'Enter Text here' ? props.inputValue : null} category_id={0} onChange={props.handleChange} placeholder="Enter Text Here" />

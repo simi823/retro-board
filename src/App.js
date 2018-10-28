@@ -8,19 +8,19 @@ const categories = [
     category_id: 1,
     name: 'Went Well',
     showNewCard: false,
-    cards: [],
+    cards: [{ card_id: '0', title: 'ww1' }, { card_id: '1', title: 'ww2' }],
   },
   {
     category_id: 2,
     name: 'To Improve',
     showNewCard: false,
-    cards: [],
+    cards: [{ card_id: '0', title: 'ti1' }, { card_id: '1', title: 'ti2' }],
   },
   {
     category_id: 3,
     name: 'Action Items',
     showNewCard: false,
-    cards: [],
+    cards: [{ card_id: '0', title: 'ai1' }, { card_id: '1', title: 'ai2' }],
   },
 ];
 class App extends Component {
@@ -70,11 +70,12 @@ class App extends Component {
     };
 
     moveLeft = (cat_index, new_cat_index, card_id) => {
-        const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => {return card.card_id === card_id ? card : null;});
+        const cardToMove = this.state.categories[cat_index].cards.find((card, idx) => {return card.card_id === card_id ? card.title : null;});
         this.setState({
             categories: this.state.categories.map((category, index) => {
                 if (category.category_id === this.state.categories[new_cat_index].category_id) {
-                    category.cards.push(cardToMove[0]);
+                let cards_length = category.cards.length;
+                    category.cards.push({card_id: cards_length.toString(), title: cardToMove.title});
                 }
                 return category;
             }),
@@ -82,12 +83,12 @@ class App extends Component {
     };
 
     moveRight = (cat_index, new_cat_index, card_id) => {
-        console.log( cat_index, new_cat_index, card_id);
-        const cardToMove = this.state.categories[cat_index].cards.filter((card, idx) => { return card.card_id === card_id ? card : null; });
+        const cardToMove = this.state.categories[cat_index].cards.find((card, idx) => { return card.card_id === card_id ? card.title : null; });
         this.setState({
             categories: this.state.categories.map((category, index) => {
                 if (category.category_id === this.state.categories[new_cat_index].category_id) {
-                    category.cards.push(cardToMove[0]);
+                    let cards_length = category.cards.length;
+                    category.cards.push({ card_id: cards_length.toString(), title: cardToMove.title});
                 }
                 return category;
             }),
@@ -132,6 +133,7 @@ class App extends Component {
                         <div className = { cardBackgroundColorClassName }>
                             {category.cards && category.cards.map((card, card_index) => {
                                 return <Card 
+                                key = {card_index}
                                 card={card} 
                                 card_id={card.card_id} 
                                 card_index={card_index}
