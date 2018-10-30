@@ -21,7 +21,7 @@ html {
 }
 
 @media (min-width: 640px) {
-  .RetroBoad {
+  .RetroBoard {
     display: flex;
     justify-content: space-between;
     margin: 0 -0.25rem;
@@ -58,7 +58,7 @@ html {
 
 .button {
   display: inline-block;
-  border: 0;
+  border: 1;
   font: inherit;
   color: inherit;
   cursor: pointer;
@@ -95,7 +95,7 @@ html {
   display: block;
   width: 100%;
   background-color: transparent;
-  border: 0;
+  border: 2px solid;
   padding: 0.25rem;
   margin-bottom: 0.5rem;
   /* resize: vertical; */

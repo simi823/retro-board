@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../retro-board.css';
 
-
+// Card component to display text and control buttons
 function Card(props) {
     console.log(props);
     return (
